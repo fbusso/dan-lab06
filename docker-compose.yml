@@ -7,7 +7,7 @@ services:
         environment:
             POSTGRES_USER: cliente_applitacion
             POSTGRES_PASSWORD: nvhYPZk74dAjkSJQ
-            POSTGRES_DB: usuarios_db
+            POSTGRES_DB: cliente_db
         ports:
             - '5432:5432'
 
