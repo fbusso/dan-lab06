@@ -1,8 +1,8 @@
 CREATE TABLE usuario
 (
     id             SERIAL PRIMARY KEY,
-    nombre_usuario VARCHAR(50) NOT NULL,
-    contrasenia    VARCHAR(50) NOT NULL
+    nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+    contrasenia    VARCHAR(50)        NOT NULL
 );
 
 CREATE TABLE tipo_cliente
@@ -14,11 +14,11 @@ CREATE TABLE tipo_cliente
 CREATE TABLE cliente
 (
     id              SERIAL PRIMARY KEY,
-    cuit            VARCHAR(11) NOT NULL,
+    cuit            VARCHAR(11) UNIQUE NOT NULL,
     fecha_baja      DATE DEFAULT NULL,
-    razon_social    VARCHAR(50) NOT NULL,
-    usuario_id      INTEGER     NOT NULL,
-    tipo_cliente_id INTEGER     NOT NULL,
+    razon_social    VARCHAR(50)        NOT NULL,
+    usuario_id      INTEGER            NOT NULL,
+    tipo_cliente_id INTEGER            NOT NULL,
     CONSTRAINT fk_cliente_tipo_cliente FOREIGN KEY (tipo_cliente_id) REFERENCES tipo_cliente (id),
     CONSTRAINT fk_cliente_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
 );
