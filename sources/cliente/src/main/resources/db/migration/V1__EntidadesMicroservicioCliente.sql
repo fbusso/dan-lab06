@@ -8,7 +8,13 @@ CREATE TABLE usuario
 CREATE TABLE tipo_cliente
 (
     id     SERIAL PRIMARY KEY,
-    nombre VARCHAR(30) NOT NULL
+    nombre VARCHAR(20) UNIQUE NOT NULL
+);
+
+CREATE TABLE tipo_obra
+(
+    id     SERIAL PRIMARY KEY,
+    nombre VARCHAR(20) UNIQUE NOT NULL
 );
 
 CREATE TABLE cliente
@@ -23,13 +29,6 @@ CREATE TABLE cliente
     CONSTRAINT fk_cliente_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
 );
 
-
-CREATE TABLE tipo_obra
-(
-    id     SERIAL PRIMARY KEY,
-    nombre VARCHAR(30) NOT NULL
-);
-
 CREATE TABLE obra
 (
     id           SERIAL PRIMARY KEY,
@@ -40,3 +39,13 @@ CREATE TABLE obra
     CONSTRAINT fk_obra_cliente FOREIGN KEY (cliente_id) REFERENCES cliente (id),
     CONSTRAINT fk_obra_tipo_obra FOREIGN KEY (tipo_obra_id) REFERENCES tipo_obra (id)
 );
+
+INSERT INTO tipo_cliente (nombre)
+VALUES ('TIPO 1'),
+       ('TIPO 2'),
+       ('TIPO 3');
+
+INSERT INTO tipo_obra (nombre)
+VALUES ('TIPO 1'),
+       ('TIPO 2'),
+       ('TIPO 3');

@@ -7,9 +7,11 @@ import java.util.Optional;
 
 public interface ClienteServicio {
 
-    Cliente crear(Cliente cliente);
+    Optional<Cliente> crear(Cliente cliente);
 
     List<Cliente> obtenerPorRazonSocial(String razonSocial);
+
+    Optional<Cliente> obtenerPorId(Integer id);
 
     Optional<Cliente> eliminar(Integer clienteId);
 

@@ -21,8 +21,10 @@ public class ClienteControlador {
 
     @PostMapping
     public ResponseEntity<Cliente> crear(@RequestBody Cliente cliente) {
-        Cliente entidad = clienteServicio.crear(cliente);
-        return new ResponseEntity<>(entidad, HttpStatus.CREATED);
+        return clienteServicio
+                .crear(cliente)
+                .map(entidad -> new ResponseEntity<>(entidad, HttpStatus.CREATED))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/cuit/{cuit}")

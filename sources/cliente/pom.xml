@@ -74,7 +74,7 @@
 					<schemas>public</schemas>
 					<locations>
 						<location>
-							filesystem:sources/cliente/src/main/resources/db/migration
+							filesystem:src/main/resources/db/migration
 						</location>
 					</locations>
 				</configuration>

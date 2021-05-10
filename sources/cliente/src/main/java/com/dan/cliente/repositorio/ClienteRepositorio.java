@@ -8,13 +8,11 @@ import java.util.Optional;
 
 public interface ClienteRepositorio extends JpaRepository<Cliente, Integer> {
 
-    Optional<Cliente> findByCuitAndFechaBajaNotNull(String cuit);
+    Optional<Cliente> findByCuitAndFechaBajaIsNull(String cuit);
 
-    Optional<Cliente> findByIdAndFechaBajaNotNull(Integer id);
+    Optional<Cliente> findByIdAndFechaBajaIsNull(Integer id);
 
-    Optional<Cliente> findByObras_idAndFechaBajaNotNull(Integer obraId);
+    List<Cliente> findAllByFechaBajaIsNull();
 
-    List<Cliente> findAllByFechaBajaNotNull();
-
-    List<Cliente> findAllByRazonSocialAndFechaBajaNotNull(String razonSocial);
+    List<Cliente> findAllByRazonSocialLikeAndFechaBajaIsNull(String razonSocial);
 }
