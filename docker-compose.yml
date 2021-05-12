@@ -5,7 +5,7 @@ services:
         image: postgres
         restart: always
         environment:
-            POSTGRES_USER: cliente_applitacion
+            POSTGRES_USER: cliente_application
             POSTGRES_PASSWORD: nvhYPZk74dAjkSJQ
             POSTGRES_DB: cliente_db
         ports:
@@ -16,7 +16,7 @@ services:
         image: postgres
         restart: always
         environment:
-            POSTGRES_USER: pedido_applitacion
+            POSTGRES_USER: pedido_application
             POSTGRES_PASSWORD: PM4YSbMp5mpCjej2
             POSTGRES_DB: puerto_db
         ports:
@@ -27,7 +27,7 @@ services:
         image: postgres
         restart: always
         environment:
-            POSTGRES_USER: producto_applitacion
+            POSTGRES_USER: producto_application
             POSTGRES_PASSWORD: b8DNZsX7WDhFaep4
             POSTGRES_DB: producto_db
         ports:
@@ -38,7 +38,7 @@ services:
         image: postgres
         restart: always
         environment:
-            POSTGRES_USER: pedido_applitacion
+            POSTGRES_USER: pedido_application
             POSTGRES_PASSWORD: mPDU3zdk8wvyw4Ft
             POSTGRES_DB: pedido_db
         ports:
@@ -49,7 +49,7 @@ services:
         image: postgres
         restart: always
         environment:
-            POSTGRES_USER: cuenta_applitacion
+            POSTGRES_USER: cuenta_application
             POSTGRES_PASSWORD: U5zRu6Vgmx6PmrmU
             POSTGRES_DB: cuenta_db
         ports:

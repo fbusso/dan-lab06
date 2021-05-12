@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.dan</groupId>
-	<artifactId>cliente</artifactId>
+	<artifactId>producto</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>cliente</name>
-	<description>Demo project for Spring Boot</description>
+	<name>producto</name>
+	<description>Microservicio de producto</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -20,11 +20,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -53,7 +48,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-
 			<plugin>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
@@ -67,9 +61,9 @@
 				</executions>
 				<configuration>
 					<driver>org.postgresql.Driver</driver>
-					<url>jdbc:postgresql://localhost:5432/cliente_db</url>
-					<user>cliente_application</user>
-					<password>nvhYPZk74dAjkSJQ</password>
+					<url>jdbc:postgresql://localhost:5434/producto_db</url>
+					<user>producto_application</user>
+					<password>b8DNZsX7WDhFaep4</password>
 					<baselineOnMigrate>true</baselineOnMigrate>
 					<schemas>public</schemas>
 					<locations>
