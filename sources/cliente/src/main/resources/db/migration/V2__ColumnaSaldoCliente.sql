@@ -1,0 +1,1 @@
+ALTER TABLE cliente ADD COLUMN saldo NUMERIC(18, 2);

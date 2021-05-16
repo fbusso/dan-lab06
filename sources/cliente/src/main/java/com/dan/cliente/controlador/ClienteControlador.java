@@ -27,6 +27,11 @@ public class ClienteControlador {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> obtenerPorId(@PathVariable Integer id) {
+        return ResponseEntity.of(clienteServicio.obtenerPorId(id));
+    }
+
     @GetMapping("/cuit/{cuit}")
     public ResponseEntity<Cliente> obtenerPorCuit(@PathVariable String cuit) {
         return ResponseEntity.of(clienteServicio.obtenerPorCuit(cuit));
