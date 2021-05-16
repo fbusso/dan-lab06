@@ -1,6 +1,7 @@
 package com.dan.cliente.dominio;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class Cliente {
     private String cuit;
     private LocalDate fechaBaja;
     private String razonSocial;
+    private BigDecimal saldo;
 
     @OneToOne
     private Usuario usuario;
@@ -77,5 +79,13 @@ public class Cliente {
 
     public void setObras(List<Obra> obras) {
         this.obras = obras;
+    }
+
+    public BigDecimal getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(BigDecimal saldo) {
+        this.saldo = saldo;
     }
 }
