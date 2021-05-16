@@ -1,45 +1,38 @@
 package dom.dan.pedido.controlador;
 
-import dom.dan.pedido.dominio.DetallePedido;
-import dom.dan.pedido.dominio.ErrorHandler;
+import dom.dan.pedido.dominio.Detalle;
 import dom.dan.pedido.dominio.EstadoPedido;
 import dom.dan.pedido.dominio.Pedido;
+import dom.dan.pedido.excepcion.EstadoPedidoRechazadoException;
+import dom.dan.pedido.servicio.EstadoPedidoServicio;
 import dom.dan.pedido.servicio.PedidoServicio;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pedido")
 public class PedidoControlador {
 
     private final PedidoServicio pedidoServicio;
+    private final EstadoPedidoServicio estadoPedidoServicio;
 
-    public PedidoControlador(PedidoServicio pedidoServicio) {
+    public PedidoControlador(PedidoServicio pedidoServicio, EstadoPedidoServicio estadoPedidoServicio) {
         this.pedidoServicio = pedidoServicio;
+        this.estadoPedidoServicio = estadoPedidoServicio;
     }
 
     @PostMapping
     public ResponseEntity<Pedido> crear(@RequestBody Pedido pedido) {
+        if(pedido.getObra() != null && pedido.getObra() > 0
+                && pedido.getDetallePedido() != null && pedido.getDetallePedido().size() > 0
+                && pedido.getDetallePedido().stream().allMatch(p -> p.getCantidad() != null && p.getCantidad() > 0 && p.getMaterial() != null)) {
+            pedido.setEstadoPedido(estadoPedidoServicio.obtenerPorNombre("NUEVO").get());
+            return ResponseEntity.ok(pedidoServicio.crear(pedido));
+        }
 
-        final String uri = "http://localhost:9000/api/cliente/{id}";
-        RestTemplate restTemplate = new RestTemplate();
-
-        Map<String, String> params = new HashMap<>();
-        params.put("id", String.valueOf(pedido.getObra()));
-
-        restTemplate.setErrorHandler(new ErrorHandler());
-        String result = restTemplate.getForObject(uri, String.class, params);
-
-        //return pedidoServicio
-          //      .crear(pedido)
-            //    .map(entidad -> new ResponseEntity<>(entidad, HttpStatus.CREATED))
-              //  .orElse(ResponseEntity.notFound().build());
-        return ResponseEntity.ok(new Pedido());
+        return ResponseEntity.badRequest().body(null);
     }
 
     @GetMapping("/obra/{id}")
@@ -54,36 +47,26 @@ public class PedidoControlador {
 
     @GetMapping("/cliente/{id}")
     public ResponseEntity<List<Pedido>> obtenerPorCliente(@PathVariable Integer id) {
-        // TODO: consumir
-        return null;//ResponseEntity.of(pedidoServicio.obtenerPorCliente(id));
+        return ResponseEntity.ok(pedidoServicio.obtenerPorCliente(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pedido> actualizar(@PathVariable Integer id, @RequestBody EstadoPedido estadoPedido) {
-        final String uri = "http://localhost:9000/api/cliente/{id}";
-        RestTemplate restTemplate = new RestTemplate();
-
-        Map<String, String> params = new HashMap<>();
-        params.put("id", String.valueOf(pedidoServicio.obtenerPorId(id)));
-
-        restTemplate.setErrorHandler(new ErrorHandler());
-        String result = restTemplate.getForObject(uri, String.class, params);
-
+    public ResponseEntity<Pedido> actualizar(@PathVariable Integer id, @RequestBody EstadoPedido estadoPedido) throws EstadoPedidoRechazadoException {
         return ResponseEntity.ok(pedidoServicio.actualizarEstado(id, estadoPedido));
     }
 
     @PostMapping("/{id}/detalle")
-    public ResponseEntity<Pedido> agregarItem(@PathVariable Integer id, @RequestBody DetallePedido detallePedido) {
-        return ResponseEntity.ok(pedidoServicio.agregarDetalle(id, detallePedido));
+    public ResponseEntity<Pedido> agregarItem(@PathVariable Integer id, @RequestBody Detalle detalle) {
+        return ResponseEntity.ok(pedidoServicio.agregarDetalle(id, detalle));
     }
 
     @PutMapping("/{id}/detalle")
-    public ResponseEntity<Pedido> actualizarItem(@PathVariable Integer id, @RequestBody List<DetallePedido> detallesPedido) {
+    public ResponseEntity<Pedido> actualizarItem(@PathVariable Integer id, @RequestBody List<Detalle> detallesPedido) {
         return ResponseEntity.ok(pedidoServicio.actualizarDetalle(id, detallesPedido));
     }
 
     @DeleteMapping("/{id}/detalle")
-    public ResponseEntity<Pedido> quitarItem(@PathVariable Integer id, @RequestBody DetallePedido detallePedido) {
-        return ResponseEntity.ok(pedidoServicio.quitarItemDetalle(id, detallePedido));
+    public ResponseEntity<Pedido> quitarItem(@PathVariable Integer id, @RequestBody Detalle detalle) {
+        return ResponseEntity.ok(pedidoServicio.quitarItemDetalle(id, detalle));
     }
 }

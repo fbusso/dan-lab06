@@ -9,8 +9,8 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToMany
-    private List<DetallePedido> detalle;
+    @OneToMany(mappedBy = "detalle")
+    private List<Detalle> detallePedido;
     private LocalDate fechaEnvio;
     private Integer obra;
     @OneToOne
@@ -48,11 +48,11 @@ public class Pedido {
         this.obra = obra;
     }
 
-    public List<DetallePedido> getDetalle() {
-        return detalle;
+    public List<Detalle> getDetallePedido() {
+        return detallePedido;
     }
 
-    public void setDetalle(List<DetallePedido> detalle) {
-        this.detalle = detalle;
+    public void setDetallePedido(List<Detalle> detalle) {
+        this.detallePedido = detalle;
     }
 }
