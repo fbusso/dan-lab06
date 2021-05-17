@@ -1,5 +1,7 @@
 package dom.dan.pedido.dominio;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -12,6 +14,7 @@ public class Detalle {
     private Integer cantidad;
     @ManyToOne
     @JoinColumn(name = "pedido_id")
+    @JsonIgnore
     private Pedido pedido;
 
     public String getMaterial() {
@@ -36,24 +39,6 @@ public class Detalle {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Detalle that = (Detalle) o;
-
-        if (!Objects.equals(material, that.material)) return false;
-        return Objects.equals(cantidad, that.cantidad);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = material != null ? material.hashCode() : 0;
-        result = 31 * result + (cantidad != null ? cantidad.hashCode() : 0);
-        return result;
     }
 
     public Pedido getPedido() {

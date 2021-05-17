@@ -7,6 +7,7 @@ import dom.dan.pedido.excepcion.EstadoPedidoRechazadoException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface PedidoServicio {
     Pedido crear(Pedido pedido);
@@ -21,7 +22,7 @@ public interface PedidoServicio {
 
     Pedido agregarDetalle(Integer id, Detalle detalle);
 
-    Pedido actualizarDetalle(Integer id, List<Detalle> detalle);
+    Pedido actualizarDetalle(Integer id, Set<Detalle> detalle);
 
     Pedido quitarItemDetalle(Integer id, Detalle detalle);
 
