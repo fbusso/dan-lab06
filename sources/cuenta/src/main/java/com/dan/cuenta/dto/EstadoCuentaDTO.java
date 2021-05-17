@@ -1,10 +1,12 @@
-package com.dan.cuenta.dominio;
+package com.dan.cuenta.dto;
+
+import com.dan.cuenta.dominio.Pago;
 
 import java.util.List;
 
-public class EstadoCuenta {
+public class EstadoCuentaDTO {
     List<Pago> pagos;
-    List<Pedido> pedidos;
+    List<PedidoDTO> pedidos;
 
     public List<Pago> getPagos() {
         return pagos;
@@ -14,11 +16,11 @@ public class EstadoCuenta {
         this.pagos = pagos;
     }
 
-    public List<Pedido> getPedidos() {
+    public List<PedidoDTO> getPedidos() {
         return pedidos;
     }
 
-    public void setPedidos(List<Pedido> pedidos) {
+    public void setPedidos(List<PedidoDTO> pedidos) {
         this.pedidos = pedidos;
     }
 

@@ -1,51 +1,46 @@
-CREATE TABLE usuario
+CREATE TABLE pago
 (
     id             SERIAL PRIMARY KEY,
-    nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
-    contrasenia    VARCHAR(50)        NOT NULL
+    fecha_pago DATE UNIQUE NOT NULL,
+    cliente_id INTEGER NOT NULL,
+    monto NUMERIC NOT NULL
 );
 
-CREATE TABLE tipo_cliente
+CREATE TABLE medio_pago
 (
     id     SERIAL PRIMARY KEY,
-    nombre VARCHAR(20) UNIQUE NOT NULL
+    observacion VARCHAR(255) NOT NULL,
+    pago_id INTEGER NOT NULL,
+    CONSTRAINT fk_pago FOREIGN KEY (pago_id) REFERENCES pago(id)
 );
 
-CREATE TABLE tipo_obra
+CREATE TABLE cheque
 (
     id     SERIAL PRIMARY KEY,
-    nombre VARCHAR(20) UNIQUE NOT NULL
+    numero_cheque INTEGER UNIQUE NOT NULL,
+    fecha_cobro DATE NOT NULL,
+    banco VARCHAR(50) NOT NULL,
+    medio_pago_id INTEGER NOT NULL,
+    CONSTRAINT fk_cheque_medio_pago FOREIGN KEY (medio_pago_id) REFERENCES medio_pago(id)
 );
 
-CREATE TABLE cliente
+CREATE TABLE efectivo
 (
-    id              SERIAL PRIMARY KEY,
-    cuit            VARCHAR(11) UNIQUE NOT NULL,
-    fecha_baja      DATE DEFAULT NULL,
-    razon_social    VARCHAR(50)        NOT NULL,
-    usuario_id      INTEGER            NOT NULL,
-    tipo_cliente_id INTEGER            NOT NULL,
-    CONSTRAINT fk_cliente_tipo_cliente FOREIGN KEY (tipo_cliente_id) REFERENCES tipo_cliente (id),
-    CONSTRAINT fk_cliente_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
+    id     SERIAL PRIMARY KEY,
+    numero_recibo INTEGER UNIQUE NOT NULL,
+    medio_pago_id INTEGER NOT NULL,
+    CONSTRAINT fk_efectivo_medio_pago FOREIGN KEY (medio_pago_id) REFERENCES medio_pago(id)
 );
 
-CREATE TABLE obra
+CREATE TABLE transferencia
 (
-    id           SERIAL PRIMARY KEY,
-    nombre       VARCHAR(30)  NOT NULL,
-    cliente_id   INTEGER      NOT NULL,
-    descripcion  VARCHAR(255) NOT NULL,
-    tipo_obra_id INTEGER      NOT NULL,
-    CONSTRAINT fk_obra_cliente FOREIGN KEY (cliente_id) REFERENCES cliente (id),
-    CONSTRAINT fk_obra_tipo_obra FOREIGN KEY (tipo_obra_id) REFERENCES tipo_obra (id)
+    id     SERIAL PRIMARY KEY,
+    cbu_origen VARCHAR(50) NOT NULL,
+    cbu_destino VARCHAR(50) NOT NULL,
+    codigo_transferencia VARCHAR(50) NOT NULL,
+    medio_pago_id INTEGER NOT NULL,
+    CONSTRAINT fk_transferencia_medio_pago FOREIGN KEY (medio_pago_id) REFERENCES medio_pago(id)
 );
 
-INSERT INTO tipo_cliente (nombre)
-VALUES ('TIPO 1'),
-       ('TIPO 2'),
-       ('TIPO 3');
 
-INSERT INTO tipo_obra (nombre)
-VALUES ('TIPO 1'),
-       ('TIPO 2'),
-       ('TIPO 3');
+

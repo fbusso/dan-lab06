@@ -10,7 +10,7 @@ public class PedidoDTO {
     private List<Detalle> detallePedido;
     private LocalDate fechaEnvio;
     private Integer obra;
-    private EstadoPedido estadoPedido;
+    private EstadoPedidoDTO estadoPedido;
 
     public Integer getId() {
         return id;
@@ -44,11 +44,11 @@ public class PedidoDTO {
         this.obra = obra;
     }
 
-    public EstadoPedido getEstadoPedido() {
+    public EstadoPedidoDTO getEstadoPedido() {
         return estadoPedido;
     }
 
-    public void setEstadoPedido(EstadoPedido estadoPedido) {
+    public void setEstadoPedido(EstadoPedidoDTO estadoPedido) {
         this.estadoPedido = estadoPedido;
     }
 }
