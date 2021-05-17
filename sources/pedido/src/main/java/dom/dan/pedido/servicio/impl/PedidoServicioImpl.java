@@ -6,25 +6,25 @@ import dom.dan.pedido.dominio.EstadoPedido;
 import dom.dan.pedido.dominio.Pedido;
 import dom.dan.pedido.excepcion.EstadoPedidoRechazadoException;
 import dom.dan.pedido.repositorio.PedidoRepositorio;
+import dom.dan.pedido.servicio.DetalleServicio;
 import dom.dan.pedido.servicio.EstadoPedidoServicio;
 import dom.dan.pedido.servicio.PedidoServicio;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 public class PedidoServicioImpl implements PedidoServicio {
     private final PedidoRepositorio pedidoRepositorio;
     private final EstadoPedidoServicio estadoPedidoServicio;
+    private final DetalleServicio detalleServicio;
 
-    public PedidoServicioImpl(PedidoRepositorio pedidoRepositorio, EstadoPedidoServicio estadoPedidoServicio) {
+    public PedidoServicioImpl(PedidoRepositorio pedidoRepositorio, EstadoPedidoServicio estadoPedidoServicio, DetalleServicio detalleServicio) {
         this.pedidoRepositorio = pedidoRepositorio;
         this.estadoPedidoServicio = estadoPedidoServicio;
+        this.detalleServicio = detalleServicio;
     }
 
     @Override
@@ -109,42 +109,48 @@ public class PedidoServicioImpl implements PedidoServicio {
     @Override
     public Pedido agregarDetalle(Integer id, Detalle detalle) {
         Optional<Pedido> pedidoOptional = pedidoRepositorio.findById(id);
-        Pedido pedido = null;
 
         if (pedidoOptional.isPresent()) {
-            pedido = pedidoOptional.get();
+            Pedido pedido = pedidoOptional.get();
+            detalle.setPedido(pedido);
             pedido.getDetallePedido().add(detalle);
-            pedidoRepositorio.save(pedido);
+            return pedidoRepositorio.save(pedido);
         }
 
-        return pedido;
+        return null;
     }
 
     @Override
-    public Pedido actualizarDetalle(Integer id, List<Detalle> detalle) {
+    @Transactional
+    public Pedido actualizarDetalle(Integer id, Set<Detalle> detalles) {
         Optional<Pedido> pedidoOptional = pedidoRepositorio.findById(id);
-        Pedido pedido = null;
 
         if (pedidoOptional.isPresent()) {
-            pedido = pedidoOptional.get();
-            pedido.setDetallePedido(detalle);
-            pedidoRepositorio.save(pedido);
+            Pedido pedido = pedidoOptional.get();
+
+            pedido.getDetallePedido().clear();
+            detalles.forEach(d -> d.setPedido(pedido));
+            pedido.getDetallePedido().addAll(detalles);
+
+            return pedidoRepositorio.save(pedido);
         }
 
-        return pedido;
+        return null;
     }
 
     @Override
     public Pedido quitarItemDetalle(Integer id, Detalle detalle) {
         Optional<Pedido> pedidoOptional = pedidoRepositorio.findById(id);
-        Pedido pedido = null;
 
         if (pedidoOptional.isPresent()) {
-            pedido = pedidoOptional.get();
-            pedido.setDetallePedido(pedido.getDetallePedido().stream().filter(d -> !d.equals(detalle)).collect(Collectors.toList()));
-            pedidoRepositorio.save(pedido);
+            Pedido pedido = pedidoOptional.get();
+            pedido.getDetallePedido().remove(detalleServicio.obtenerPorId(detalle.getId()).get());
+
+            //detalleServicio.eliminarPorId(detalle.getId());
+            //return pedidoOptional.get();
+            return pedidoRepositorio.save(pedido);
         }
 
-        return pedido;
+        return null;
     }
 }

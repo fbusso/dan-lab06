@@ -3,14 +3,15 @@ package dom.dan.pedido.dominio;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToMany(mappedBy = "detalle")
-    private List<Detalle> detallePedido;
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<Detalle> detallePedido;
     private LocalDate fechaEnvio;
     private Integer obra;
     @OneToOne
@@ -48,11 +49,11 @@ public class Pedido {
         this.obra = obra;
     }
 
-    public List<Detalle> getDetallePedido() {
+    public Set<Detalle> getDetallePedido() {
         return detallePedido;
     }
 
-    public void setDetallePedido(List<Detalle> detalle) {
-        this.detallePedido = detalle;
+    public void setDetallePedido(Set<Detalle> detallePedido) {
+        this.detallePedido = detallePedido;
     }
 }
