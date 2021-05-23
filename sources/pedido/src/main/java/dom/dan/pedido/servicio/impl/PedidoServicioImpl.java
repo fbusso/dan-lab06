@@ -4,6 +4,8 @@ import dom.dan.pedido.dominio.Detalle;
 import dom.dan.pedido.dominio.ErrorHandler;
 import dom.dan.pedido.dominio.EstadoPedido;
 import dom.dan.pedido.dominio.Pedido;
+import dom.dan.pedido.dto.ClienteDTO;
+import dom.dan.pedido.dto.ObraDTO;
 import dom.dan.pedido.excepcion.EstadoPedidoRechazadoException;
 import dom.dan.pedido.repositorio.PedidoRepositorio;
 import dom.dan.pedido.servicio.DetalleServicio;
@@ -14,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PedidoServicioImpl implements PedidoServicio {
@@ -71,13 +74,14 @@ public class PedidoServicioImpl implements PedidoServicio {
         params.put("idCliente", String.valueOf(idCliente));
 
         restTemplate.setErrorHandler(new ErrorHandler());
-        String result = restTemplate.getForObject(uri, String.class, params);
+        ClienteDTO result = restTemplate.getForObject(uri, ClienteDTO.class, params);
 
-        // TODO: Aca obtener todas las obras de los clientes
-        // TODO: Recorrer la lista de obras y matchear todos los pedidos;
-        // TODO: Retornar todos los pedidos que esten en esas obras de esos clientes.
+        if(result == null || result.getObras() == null)
+            return new ArrayList<>();
 
-        return null;
+        List<Integer> listaObras = result.getObras().stream().map(ObraDTO::getId).collect(Collectors.toList());
+
+        return pedidoRepositorio.findByIdIn(listaObras);
     }
 
     @Override
