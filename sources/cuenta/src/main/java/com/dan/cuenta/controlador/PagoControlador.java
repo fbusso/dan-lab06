@@ -25,7 +25,7 @@ public class PagoControlador {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{cliente_id}")
+    @GetMapping("/{clienteId}")
     public ResponseEntity<EstadoCuentaDTO> estado(@PathVariable Integer clienteId){
         return pagoServicio
                 .estado(clienteId)

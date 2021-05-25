@@ -4,20 +4,19 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@DiscriminatorValue(value = "CHEQUE")
 public class Cheque extends MedioPago{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     private Integer numeroCheque;
     private LocalDate fechaCobro;
     private String banco;
 
-    public Integer getId() {
-        return id;
-    }
+    public Cheque() {}
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Cheque(String observacion, Pago pago, Integer numeroCheque, LocalDate fechaCobro, String banco) {
+        super(observacion, pago);
+        this.numeroCheque = numeroCheque;
+        this.fechaCobro = fechaCobro;
+        this.banco = banco;
     }
 
     public Integer getNumeroCheque() {

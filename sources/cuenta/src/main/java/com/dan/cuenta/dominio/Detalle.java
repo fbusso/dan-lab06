@@ -3,6 +3,8 @@ package com.dan.cuenta.dominio;
 
 import com.dan.cuenta.dto.PedidoDTO;
 
+import javax.persistence.Entity;
+
 public class Detalle {
     private Integer id;
     private String material;

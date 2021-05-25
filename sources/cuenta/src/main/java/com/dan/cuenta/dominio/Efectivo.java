@@ -1,23 +1,17 @@
 package com.dan.cuenta.dominio;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-public class Efectivo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@DiscriminatorValue(value = "EFECTIVO")
+public class Efectivo extends MedioPago{
     private Integer numeroRecibo;
 
-    public Integer getId() {
-        return id;
-    }
+    public Efectivo() {}
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Efectivo(String observacion, Pago pago, Integer numeroRecibo) {
+        super(observacion, pago);
+        this.numeroRecibo = numeroRecibo;
     }
 
     public Integer getNumeroRecibo() {

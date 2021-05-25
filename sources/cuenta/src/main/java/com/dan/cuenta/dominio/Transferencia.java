@@ -1,25 +1,21 @@
 package com.dan.cuenta.dominio;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-public class Transferencia {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@DiscriminatorValue(value = "TRANSFERENCIA")
+public class Transferencia extends MedioPago{
     private String cbuOrigen;
     private String cbuDestino;
     private Long codigoTransferencia;
 
-    public Integer getId() {
-        return id;
-    }
+    public Transferencia() {}
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Transferencia(String observacion, Pago pago, String cbuOrigen, String cbuDestino, Long codigoTransferencia) {
+        super(observacion, pago);
+        this.cbuOrigen = cbuOrigen;
+        this.cbuDestino = cbuDestino;
+        this.codigoTransferencia = codigoTransferencia;
     }
 
     public String getCbuOrigen() {

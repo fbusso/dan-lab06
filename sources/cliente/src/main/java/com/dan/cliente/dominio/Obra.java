@@ -1,5 +1,7 @@
 package com.dan.cliente.dominio;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class Obra {
     private String nombre;
     private String descripcion;
 
+    @JsonIgnore
     @ManyToOne
     private Cliente cliente;
 

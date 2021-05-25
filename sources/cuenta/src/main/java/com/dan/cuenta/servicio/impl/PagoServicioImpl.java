@@ -1,16 +1,17 @@
 package com.dan.cuenta.servicio.impl;
 
-import com.dan.cuenta.auxiliar.ListaPedidos;
+import com.dan.cuenta.dominio.*;
 import com.dan.cuenta.dto.EstadoCuentaDTO;
-import com.dan.cuenta.dominio.Pago;
+import com.dan.cuenta.repositiorio.MedioPagoRepositorio;
 import com.dan.cuenta.repositiorio.PagoRepositorio;
+import com.dan.cuenta.repositiorio.TransferenciaRepositorio;
 import com.dan.cuenta.servicio.PagoServicio;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.dan.cuenta.dominio.ErrorHandler;
 
-import java.time.LocalDate;
+import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,16 +19,32 @@ import java.util.Optional;
 public class PagoServicioImpl implements PagoServicio {
 
     private final PagoRepositorio pagoRepositorio;
+    private final TransferenciaRepositorio transferenciaRepositorio;
 
-    public PagoServicioImpl(PagoRepositorio pagoRepositorio) {
+    public PagoServicioImpl(PagoRepositorio pagoRepositorio, TransferenciaRepositorio transferenciaRepositorio) {
         this.pagoRepositorio = pagoRepositorio;
+        this.transferenciaRepositorio = transferenciaRepositorio;
     }
 
     @Override
+    @Transactional
     public Optional<Pago> crear(Pago pago) {
-        Pago pagoNuevo = pago;
-        pagoNuevo.setFechaPago(LocalDate.now());
-        return Optional.of(pagoRepositorio.save(pagoNuevo));
+
+        MedioPago medioPago = pago.getMedioPago();
+
+        switch (medioPago.getDtype()){
+            case "EFECTIVO":
+                pago.setMedioPago(new Efectivo(medioPago.getObservacion(),medioPago.getPago(),medioPago.getNumeroRecibo()));
+                break;
+            case "CHEQUE":
+                pago.setMedioPago(new Cheque("test",medioPago.getPago(), medioPago.getNumeroCheque(), medioPago.getFechaCobro(), medioPago.getBanco()));
+                break;
+            case "TRANSFERENCIA":
+                pago.setMedioPago(new Transferencia("test",medioPago.getPago(), medioPago.getCbuOrigen(), medioPago.getCbuDestino(), medioPago.getCodigoTransferencia()));
+                break;
+            default:
+        }
+        return Optional.of(pagoRepositorio.save(pago));
     }
 
     @Override
@@ -40,9 +57,9 @@ public class PagoServicioImpl implements PagoServicio {
         params.put("clienteId", String.valueOf(clienteId));
 
         restTemplate.setErrorHandler(new ErrorHandler());
-        ListaPedidos pedidos = restTemplate.getForObject(uri, ListaPedidos.class, params);
+        List pedidos = restTemplate.getForObject(uri, List.class, params);
 
-        estadoCuentaDTO.setPedidos(pedidos.getPedidos());
+        estadoCuentaDTO.setPedidos(pedidos);
         estadoCuentaDTO.setPagos(pagoRepositorio.findByClienteId(clienteId));
 
         return Optional.of(estadoCuentaDTO);
