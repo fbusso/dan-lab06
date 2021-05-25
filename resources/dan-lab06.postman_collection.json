@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "03402b8a-3abf-4887-ae55-8f575d41f1cb",
+		"_postman_id": "8b2b22e5-8511-4b81-b656-30c35852ba6b",
 		"name": "dan-lab06",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -508,6 +508,84 @@
 								"pedido",
 								"4",
 								"detalle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos por cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9002/api/pedido/cliente/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"pedido",
+								"cliente",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Microservicio Cuenta Corriente",
+			"item": [
+				{
+					"name": "Estado Cuenta para Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9003/api/cuenta/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9003",
+							"path": [
+								"api",
+								"cuenta",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear pago",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fechaPago\" : \"2021-05-23\",\r\n    \"monto\" : 20.2,\r\n    \"clienteId\" : 1,\r\n    \"medioPago\": {\r\n        \"dtype\": \"TRANSFERENCIA\",\r\n        \"cbuOrigen\": \"23223\",\r\n        \"cbuDestino\": \"233113\",\r\n        \"codigoTransferencia\": \"2442\",\r\n        \"observacion\": \"test\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9003/api/cuenta/pago",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9003",
+							"path": [
+								"api",
+								"cuenta",
+								"pago"
 							]
 						}
 					},
