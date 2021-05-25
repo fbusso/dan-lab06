@@ -1,24 +1,11 @@
-package com.dan.cliente.dominio;
+package dom.dan.pedido.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
-
-@Entity
-public class Obra {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ObraDTO {
     private Integer id;
     private String nombre;
     private String descripcion;
-
-    @JsonIgnore
-    @ManyToOne
-    private Cliente cliente;
-
-    @ManyToOne
-    private TipoObra tipoObra;
+    private ClienteDTO cliente;
+    private TipoObraDTO tipoObra;
 
     public Integer getId() {
         return id;
@@ -44,19 +31,19 @@ public class Obra {
         this.descripcion = descripcion;
     }
 
-    public Cliente getCliente() {
+    public ClienteDTO getCliente() {
         return cliente;
     }
 
-    public void setCliente(Cliente cliente) {
+    public void setCliente(ClienteDTO cliente) {
         this.cliente = cliente;
     }
 
-    public TipoObra getTipoObra() {
+    public TipoObraDTO getTipoObra() {
         return tipoObra;
     }
 
-    public void setTipoObra(TipoObra tipoObra) {
+    public void setTipoObra(TipoObraDTO tipoObra) {
         this.tipoObra = tipoObra;
     }
 }

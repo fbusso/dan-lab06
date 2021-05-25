@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fd977fea-83e6-4fc2-8b86-a433412eb4b1",
+		"_postman_id": "8b2b22e5-8511-4b81-b656-30c35852ba6b",
 		"name": "dan-lab06",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cuit\" : 3041490799,\r\n    \"razonSocial\" : \"Francisco Ignacio Busso\",\r\n    \"saldo\" : 30000.00,\r\n    \"usuario\" : {\r\n       \"nombreUsuario\" : \"fbusso2@frsf.utn.edu.ar\",\r\n       \"contrasenia\" : \"contraseña\" \r\n    },\r\n    \"tipoCliente\" : {\r\n        \"id\" : 1\r\n    }\r\n}",
+							"raw": "{\r\n    \"cuit\" : 3041490799,\r\n    \"razonSocial\" : \"Francisco Ignacio Busso\",\r\n    \"usuario\" : {\r\n       \"nombreUsuario\" : \"fbusso2@frsf.utn.edu.ar\",\r\n       \"contrasenia\" : \"contraseña\" \r\n    },\r\n    \"tipoCliente\" : {\r\n        \"id\" : 1\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -307,6 +307,285 @@
 									"key": "stockHasta",
 									"value": "60"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Microservicio Pedido",
+			"item": [
+				{
+					"name": "Crear pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"obra\": 1,\r\n    \"detallePedido\": [\r\n        {\r\n            \"material\": \"Ladrillos\",\r\n            \"cantidad\": 100\r\n        }\r\n    ],\r\n    \"fechaEnvio\": \"2021-05-16\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9002/api/pedido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"pedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar estado",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"nombre\": \"CONFIRMADO\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9002/api/pedido/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"pedido",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos por obra",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9002/api/pedido/obra/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"pedido",
+								"obra",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos por estado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9002/api/pedido/obra/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"pedido",
+								"obra",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar item a pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"material\": \"Papel tapiz\",\r\n    \"cantidad\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9002/api/pedido/1/detalle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"pedido",
+								"1",
+								"detalle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar item a pedido",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\r\n    \"material\": \"Madera\",\r\n    \"cantidad\": 1\r\n}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9002/api/pedido/1/detalle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"pedido",
+								"1",
+								"detalle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar item a pedido",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 32\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9002/api/pedido/4/detalle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"pedido",
+								"4",
+								"detalle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos por cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9002/api/pedido/cliente/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"api",
+								"pedido",
+								"cliente",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Microservicio Cuenta Corriente",
+			"item": [
+				{
+					"name": "Estado Cuenta para Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9003/api/cuenta/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9003",
+							"path": [
+								"api",
+								"cuenta",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear pago",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fechaPago\" : \"2021-05-23\",\r\n    \"monto\" : 20.2,\r\n    \"clienteId\" : 1,\r\n    \"medioPago\": {\r\n        \"dtype\": \"TRANSFERENCIA\",\r\n        \"cbuOrigen\": \"23223\",\r\n        \"cbuDestino\": \"233113\",\r\n        \"codigoTransferencia\": \"2442\",\r\n        \"observacion\": \"test\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9003/api/cuenta/pago",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9003",
+							"path": [
+								"api",
+								"cuenta",
+								"pago"
 							]
 						}
 					},
