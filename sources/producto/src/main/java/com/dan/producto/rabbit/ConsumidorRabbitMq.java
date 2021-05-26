@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class ConsumidorRabbitMq {
 
     @RabbitListener(queues = "COLA_PEDIDOS")
-    public void recievedMessage(PedidoDto pedido) {
-        System.out.println("Recieved Message From RabbitMQ: " + pedido);
+    public void mensajeRecibido(PedidoDto pedido) {
+        System.out.println("Mensaje recibido desde RabbitMQ: " + pedido);
     }
 }
