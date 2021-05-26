@@ -1,6 +1,5 @@
 package dom.dan.pedido.controlador;
 
-import ch.qos.logback.core.CoreConstants;
 import dom.dan.pedido.dominio.Detalle;
 import dom.dan.pedido.dominio.EstadoPedido;
 import dom.dan.pedido.dominio.Pedido;

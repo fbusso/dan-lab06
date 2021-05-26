@@ -27,4 +27,6 @@ public interface PedidoServicio {
     Pedido quitarItemDetalle(Integer id, Detalle detalle);
 
     List<Pedido> obtenerPorCliente(Integer idCliente);
+
+    void enviarConfirmacion(Pedido pedido);
 }

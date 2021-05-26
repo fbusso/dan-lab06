@@ -54,3 +54,10 @@ services:
             POSTGRES_DB: cuenta_db
         ports:
             - '5436:5432'
+
+    rabbit-mq:
+        container_name: cola-mensajes
+        image: rabbitmq:management
+        ports:
+            - "5672:5672"
+            - "15672:15672"

@@ -1,5 +1,6 @@
 package dom.dan.pedido.servicio.impl;
 
+import dom.dan.pedido.rabbit.ProductorRabbitMq;
 import dom.dan.pedido.dominio.Detalle;
 import dom.dan.pedido.dominio.ErrorHandler;
 import dom.dan.pedido.dominio.EstadoPedido;
@@ -11,6 +12,7 @@ import dom.dan.pedido.repositorio.PedidoRepositorio;
 import dom.dan.pedido.servicio.DetalleServicio;
 import dom.dan.pedido.servicio.EstadoPedidoServicio;
 import dom.dan.pedido.servicio.PedidoServicio;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,11 +25,16 @@ public class PedidoServicioImpl implements PedidoServicio {
     private final PedidoRepositorio pedidoRepositorio;
     private final EstadoPedidoServicio estadoPedidoServicio;
     private final DetalleServicio detalleServicio;
+    private final RabbitTemplate rabbitTemplate;
 
-    public PedidoServicioImpl(PedidoRepositorio pedidoRepositorio, EstadoPedidoServicio estadoPedidoServicio, DetalleServicio detalleServicio) {
+    public PedidoServicioImpl(PedidoRepositorio pedidoRepositorio,
+                              EstadoPedidoServicio estadoPedidoServicio,
+                              DetalleServicio detalleServicio,
+                              RabbitTemplate rabbitTemplate) {
         this.pedidoRepositorio = pedidoRepositorio;
         this.estadoPedidoServicio = estadoPedidoServicio;
         this.detalleServicio = detalleServicio;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -76,7 +83,7 @@ public class PedidoServicioImpl implements PedidoServicio {
         restTemplate.setErrorHandler(new ErrorHandler());
         ClienteDTO result = restTemplate.getForObject(uri, ClienteDTO.class, params);
 
-        if(result == null || result.getObras() == null)
+        if (result == null || result.getObras() == null)
             return new ArrayList<>();
 
         List<Integer> listaObras = result.getObras().stream().map(ObraDTO::getId).collect(Collectors.toList());
@@ -89,25 +96,9 @@ public class PedidoServicioImpl implements PedidoServicio {
         return pedidoRepositorio.findByEstadoPedido_Id(id);
     }
 
-    private Pedido confirmarPedido(Pedido pedido) throws EstadoPedidoRechazadoException {
-        boolean stockCheck = pedido.getDetallePedido().stream().noneMatch(d -> d.getCantidad().equals(0));
-        boolean saldoDeudor = false;
-        boolean situacionCrediticia = true;
-
-        if (stockCheck && (!saldoDeudor || situacionCrediticia)) {
-            pedido.setEstadoPedido(estadoPedidoServicio.obtenerPorNombre("ACEPTADO").get());
-            return pedidoRepositorio.save(pedido);
-        } else if (!stockCheck) {
-            pedido.setEstadoPedido(estadoPedidoServicio.obtenerPorNombre("PENDIENTE").get());
-            return pedidoRepositorio.save(pedido);
-        } else if (!saldoDeudor && !situacionCrediticia) {
-            pedido.setEstadoPedido(estadoPedidoServicio.obtenerPorNombre("RECHAZADO").get());
-            pedidoRepositorio.save(pedido);
-
-            throw new EstadoPedidoRechazadoException();
-        }
-
-        return null;
+    @Override
+    public void enviarConfirmacion(Pedido pedido) {
+        rabbitTemplate.convertAndSend(ProductorRabbitMq.DIRECT_EXCHANGE_NAME, ProductorRabbitMq.ROUTING_KEY, pedido);
     }
 
     @Override
@@ -153,6 +144,27 @@ public class PedidoServicioImpl implements PedidoServicio {
             //detalleServicio.eliminarPorId(detalle.getId());
             //return pedidoOptional.get();
             return pedidoRepositorio.save(pedido);
+        }
+
+        return null;
+    }
+
+    private Pedido confirmarPedido(Pedido pedido) throws EstadoPedidoRechazadoException {
+        boolean stockCheck = pedido.getDetallePedido().stream().noneMatch(d -> d.getCantidad().equals(0));
+        boolean saldoDeudor = false;
+        boolean situacionCrediticia = true;
+
+        if (stockCheck && (!saldoDeudor || situacionCrediticia)) {
+            pedido.setEstadoPedido(estadoPedidoServicio.obtenerPorNombre("ACEPTADO").get());
+            return pedidoRepositorio.save(pedido);
+        } else if (!stockCheck) {
+            pedido.setEstadoPedido(estadoPedidoServicio.obtenerPorNombre("PENDIENTE").get());
+            return pedidoRepositorio.save(pedido);
+        } else if (!saldoDeudor && !situacionCrediticia) {
+            pedido.setEstadoPedido(estadoPedidoServicio.obtenerPorNombre("RECHAZADO").get());
+            pedidoRepositorio.save(pedido);
+
+            throw new EstadoPedidoRechazadoException();
         }
 
         return null;
